@@ -32,6 +32,7 @@
 
 #include <ogdf/basic/List.h>
 #include <ogdf/basic/RegisteredArray.h>
+#include <ogdf/basic/basic.h>
 
 #include <type_traits>
 

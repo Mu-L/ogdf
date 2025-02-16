@@ -38,8 +38,8 @@
 #include <ogdf/cluster/ClusterGraph.h>
 
 #include <functional>
+#include <list>
 #include <string>
-#include <vector>
 
 #include "ogdf/cluster/ClusterSet.h"
 

@@ -38,8 +38,8 @@
 #include <ogdf/basic/graph_generators/randomized.h>
 
 #include <functional>
+#include <list>
 #include <string>
-#include <vector>
 
 #include "array_helper.h"
 #include <testing.h>

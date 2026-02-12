@@ -9,6 +9,7 @@ set_property(CACHE OGDF_DEBUG_MODE PROPERTY STRINGS NONE REGULAR HEAVY)
 mark_as_advanced(OGDF_DEBUG_MODE)
 option(OGDF_EXTERNAL_PUGIXML "Do not use the pugixml version packaged with the OGDF, but one provided by the system" OFF)
 option(OGDF_EXTERNAL_BACKWARD "Do not use the backward version packaged with the OGDF, but one provided by the system" OFF)
+mark_as_advanced(OGDF_EXTERNAL_PUGIXML OGDF_EXTERNAL_BACKWARD)
 option(OGDF_INCLUDE_CGAL "Indicates whether components that require CGAL ({src,include}/ogdf/geometric) should be built. Requires OpenMP" OFF)
 option(OGDF_USE_ASSERT_EXCEPTIONS "Whether to throw an exception on failed assertions." OFF)
 set(OGDF_USE_ASSERT_EXCEPTIONS_WITH_STACK_TRACE "OFF" CACHE

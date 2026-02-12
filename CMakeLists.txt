@@ -8,6 +8,7 @@ set(CMAKE_DEBUG_POSTFIX "-debug")
 option(OGDF_EXTERNAL_COIN "Do not use the COIN version packaged with the OGDF, but one provided by the system" OFF)
 option(OGDF_LIBRARY_TARGETS_ONLY "Generate only the library targets (COIN and OGDF)" OFF)
 option(OGDF_DISABLE_HELP_MESSAGE "Disable the CMake Configure help message generated for OGDF" OFF)
+mark_as_advanced(OGDF_EXTERNAL_COIN OGDF_LIBRARY_TARGETS_ONLY OGDF_DISABLE_HELP_MESSAGE)
 
 set(module_dir "${PROJECT_SOURCE_DIR}/cmake")
 list(INSERT CMAKE_MODULE_PATH 0 "${module_dir}" )

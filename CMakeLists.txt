@@ -31,10 +31,11 @@ include(GNUInstallDirs)
 include(compiler-specifics)
 include(group-files)
 if(OGDF_EXTERNAL_COIN)
-  # standard COIN has no CMake config/find files, so we search it via pkg-config
-  # osi-clp pulls in clp, osi and coinutils automatically, which are all the parts of COIN we vendor
+  # Standard COIN has no CMake config/find files, so we search it via its provided pkg-config files.
+  # There, osi-clp pulls in clp, osi, and coinutils automatically (which are all the parts of COIN we vendor),
+  # but we still need to specify them explicitly to make the linker find symbols in the right order.
   find_package(PkgConfig)
-  pkg_check_modules(OsiClp REQUIRED IMPORTED_TARGET GLOBAL osi-clp)
+  pkg_check_modules(OsiClp REQUIRED IMPORTED_TARGET GLOBAL osi-clp clp osi coinutils)
   add_library(COIN ALIAS PkgConfig::OsiClp)
 
   # these are same options as our vendored coin.cmake provides, ogdf::CoinManager uses them in createCorrectOsiSolverInterface

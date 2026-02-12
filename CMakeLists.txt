@@ -30,7 +30,12 @@ include(GNUInstallDirs)
 include(compiler-specifics)
 include(group-files)
 if(OGDF_EXTERNAL_COIN)
-  find_package(COIN REQUIRED)
+  # standard COIN has no CMake config/find files, so we search it via pkg-config
+  # osi-clp pulls in clp, osi and coinutils automatically, which are all the parts of COIN we vendor
+  find_package(PkgConfig)
+  pkg_check_modules(OsiClp REQUIRED IMPORTED_TARGET GLOBAL osi-clp)
+  add_library(COIN ALIAS PkgConfig::OsiClp)
+
   set(COIN_SOLVER "CLP" CACHE STRING "Linear program solver to be used by COIN.")
   set_property(CACHE COIN_SOLVER PROPERTY STRINGS CLP CPX GRB)
   set(COIN_SOLVER_IS_EXTERNAL 0)

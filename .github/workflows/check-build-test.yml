@@ -373,6 +373,7 @@ jobs:
         shell: bash -xel {0}
       - name: Test ${{ matrix.mode }} build and run
         run: |
+          rm -rf include/coin # otherwise we use the vendored includes instead of system-provided ones
           util/test_build_and_run.sh \
             ${{ matrix.mode == 'debug' && 'dynamic' || 'static' }} \
             ${{ matrix.mode }} \

@@ -2,6 +2,10 @@
 // Corporation and others.  All Rights Reserved.
 // This code is licensed under the terms of the Eclipse Public License (EPL).
 
+#ifdef OGDF_EXTERNAL_COIN
+#error "OGDF_EXTERNAL_COIN set, but COIN includes vendored with the OGDF source are used! Delete or rename ogdf/include/coin to ensure the correct COIN headers are used."
+#endif
+
 #ifndef OsiSolverInterface_H
 #define OsiSolverInterface_H
 

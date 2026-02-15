@@ -1,3 +1,6 @@
+#ifdef OGDF_EXTERNAL_COIN
+#error "OGDF_EXTERNAL_COIN set, but COIN includes vendored with the OGDF source are used! Delete or rename ogdf/include/coin to ensure the correct COIN headers are used."
+#endif
 
 /* include the COIN-OR-wide system specific configure header */
 #include "configall_system.h"

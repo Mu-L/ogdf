@@ -331,6 +331,77 @@ jobs:
           name: failed-tests-logs-${{ github.job }}-${{ env.GH_COMPILER_NAME }}-${{ env.GH_COMPILER_VER }}-${{ matrix.mode }}
           path: "./failed-tests-logs"
 
+  build-conda:
+    name: "Test ${{ matrix.mode }} build on ${{ matrix.os }} with conda"
+    strategy:
+      matrix: # when changing OSes, also update the prune-all-caches script
+        # windows is disabled and we generally only run selected configs, see PR #292
+        # mode: [ debug, release ]
+        # os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+        include:
+          - mode: release
+            os: 'ubuntu-latest'
+          - mode: debug
+            os: 'macos-latest'
+    runs-on: ${{ matrix.os }}
+    needs: [ style, dirs, self-sufficiency, docs ]
+    env:
+      CCACHE_COMPILERCHECK: ${{ matrix.os != 'windows-latest' && '"%compiler% -v"' || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2 # windows
+        if: runner.os == 'Windows'
+      - run: brew install coreutils findutils # macos
+        if: runner.os == 'macOS'
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          channels: conda-forge
+          auto-activate: true
+          activate-environment: ""
+      - name: Install conda packages
+        run: conda install -y make cmake zlib backward-cpp pugixml coincbc pkg-config
+      - name: Set-up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.mode }}
+      - name: Set-up ccache HTTP proxy
+        uses: ./.github/actions/ccache-proxy
+      - name: Dump conda environment info
+        run: |
+          conda info
+          conda list
+          conda config --show-sources
+          conda config --show
+          which pkg-config
+          pkg-config --variable pc_path pkg-config
+          pkg-config --debug --print-errors coinutils
+        shell: bash -xel {0}
+      - name: Test ${{ matrix.mode }} build and run
+        run: |
+          rm -rf include/coin # otherwise we use the vendored includes instead of system-provided ones
+          util/test_build_and_run.sh \
+            ${{ matrix.mode == 'debug' && 'dynamic' || 'static' }} \
+            ${{ matrix.mode }} \
+            default_c \
+            default_s \
+            -DOGDF_USE_ASSERT_EXCEPTIONS=ON ${{ runner.os == 'Linux' && '-DOGDF_ARCH=haswell' || '' }} \
+            -DOGDF_EXTERNAL_COIN=ON -DOGDF_EXTERNAL_PUGIXML=ON  \
+            -DOGDF_EXTERNAL_BACKWARD=ON -DSTACK_DETAILS_AUTO_DETECT=FALSE \
+            ${{ runner.os == 'Windows' && '-DCMAKE_C_COMPILER_LAUNCHER=ccache.exe -DCMAKE_CXX_COMPILER_LAUNCHER=ccache.exe' || '-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache' }}
+        shell: bash -el {0}
+      - uses: actions/upload-artifact@v4
+        name: Upload ccache debug info
+        if: ${{ env.CCACHE_DEBUG == 1 }}
+        with:
+          name: ${{ github.job }}-${{ matrix.mode }}-${{ matrix.os }}
+          path: ${{ github.workspace }}/ccache-debug
+      - name: Store failed test reports
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: failed-tests-logs-${{ github.job }}-${{ matrix.os }}-${{ matrix.mode }}
+          path: "./failed-tests-logs"
+
   build-macos:
     name: "Test ${{ matrix.mode }} build on ${{ matrix.os }}"
     strategy:

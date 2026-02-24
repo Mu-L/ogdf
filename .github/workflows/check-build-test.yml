@@ -334,10 +334,15 @@ jobs:
   build-conda:
     name: "Test ${{ matrix.mode }} build on ${{ matrix.os }} with conda"
     strategy:
-      fail-fast: false # NOSHIP
       matrix: # when changing OSes, also update the prune-all-caches script
-        mode: [ debug, release ]
-        os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+        # windows is disabled and we generally only run selected configs, see PR #292
+        # mode: [ debug, release ]
+        # os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+        include:
+          - mode: release
+            os: 'ubuntu-latest'
+          - mode: debug
+            os: 'macos-latest'
     runs-on: ${{ matrix.os }}
     needs: [ style, dirs, self-sufficiency, docs ]
     env:
@@ -354,11 +359,11 @@ jobs:
           auto-activate: true
           activate-environment: ""
       - name: Install conda packages
-        run: conda install -y make cmake ccache zlib backward-cpp pugixml coincbc pkg-config
+        run: conda install -y make cmake zlib backward-cpp pugixml coincbc pkg-config
       - name: Set-up ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ${{ github.job }}-${{ matrix.compiler }}-${{ matrix.mode }}
+          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.mode }}
       - name: Set-up ccache HTTP proxy
         uses: ./.github/actions/ccache-proxy
       - name: Dump conda environment info

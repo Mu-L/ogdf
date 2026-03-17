@@ -695,6 +695,32 @@ public:
 		return m_edgeArrow[e];
 	}
 
+	//! Returns the effective arrow type of edge \p e, i.e., what should be used for displaying.
+	/**
+	 * This always works (even if #edgeArrow isn't enabled) and never returns #EdgeArrow::Undefined.
+	 * If #edgeArrow isn't enabled or the #arrowType were #EdgeArrow::Undefined, it instead
+	 * infers the arrow type based on the #edgeType (if available) or whether we are #directed().
+	 */
+	EdgeArrow effectiveArrowType(edge e) const {
+		if (!has(edgeArrow) || arrowType(e) == EdgeArrow::Undefined) {
+			if (has(edgeType)) {
+				if (type(e) == Graph::EdgeType::generalization) {
+					return EdgeArrow::Last;
+				} else {
+					return EdgeArrow::None;
+				}
+			} else {
+				if (directed()) {
+					return EdgeArrow::Last;
+				} else {
+					return EdgeArrow::None;
+				}
+			}
+		} else {
+			return arrowType(e);
+		}
+	}
+
 	//! Returns the stroke type of edge \p e.
 	/**
 	 * \pre #edgeStyle is enabled

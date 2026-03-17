@@ -472,22 +472,16 @@ std::string TikzWriter::getEdgeStyle(edge e) const {
 }
 
 std::string TikzWriter::getEdgeArrows(edge e) const {
-	if (m_attr.has(GraphAttributes::edgeArrow)) {
-		switch (m_attr.arrowType(e)) {
-		case EdgeArrow::Last:
-			return "->";
-		case EdgeArrow::First:
-			return "<-";
-		case EdgeArrow::Both:
-			return "<->";
-		default:
-			return "-";
-		}
-	} else if (m_attr.directed()) {
+	switch (m_attr.effectiveArrowType(e)) {
+	case EdgeArrow::Last:
 		return "->";
+	case EdgeArrow::First:
+		return "<-";
+	case EdgeArrow::Both:
+		return "<->";
+	default:
+		return "-";
 	}
-
-	return "-";
 }
 
 std::string TikzWriter::getEdgeLabel(edge e, const DPoint& previousPoint,

@@ -155,7 +155,7 @@ static inline void writeAttributes(std::ostream& out, const GraphAttributes& GA,
 	}
 
 	if (flags & GraphAttributes::edgeArrow) {
-		writeAttribute(out, comma, "dir", dot::toString(GA.arrowType(e)));
+		writeAttribute(out, comma, "dir", dot::toString(GA.effectiveArrowType(e)));
 	}
 
 	if (flags & GraphAttributes::edgeStyle) {

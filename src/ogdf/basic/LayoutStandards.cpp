@@ -42,7 +42,7 @@ Stroke LayoutStandards::s_defNodeStroke(Color::Name::Black);
 Fill LayoutStandards::s_defNodeFill(Color::Name::White);
 
 Stroke LayoutStandards::s_defEdgeStroke(Color::Name::Black);
-EdgeArrow LayoutStandards::s_defEdgeArrow = EdgeArrow::Last;
+EdgeArrow LayoutStandards::s_defEdgeArrow = EdgeArrow::Undefined;
 
 Stroke LayoutStandards::s_defClusterStroke(Color::Name::Gray);
 Fill LayoutStandards::s_defClusterFill(Color::Name::White, FillPattern::None);

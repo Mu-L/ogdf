@@ -235,25 +235,9 @@ static void write_gml_graph(const GraphAttributes& A, std::ostream& os, NodeArra
 			GraphIO::indent(os, 3) << "type\t\"line\"\n";
 
 			GraphIO::indent(os, 3) << "arrow\t\"";
-			if (!A.has(GraphAttributes::edgeArrow)) {
-				if (A.has(GraphAttributes::edgeType)) {
-					if (A.type(e) == Graph::EdgeType::generalization) {
-						os << "last";
-					} else {
-						os << "none";
-					}
-				} else {
-					if (A.directed()) {
-						os << "last";
-					} else {
-						os << "none";
-					}
-				}
-			} else {
-				int ae = (int)A.arrowType(e);
-				OGDF_ASSERT(0 <= ae && ae < 4);
-				os << arrow_str[ae];
-			}
+			int ae = (int)A.effectiveArrowType(e);
+			OGDF_ASSERT(0 <= ae && ae < 4);
+			os << arrow_str[ae];
 			os << "\"\n";
 
 			if (A.has(GraphAttributes::edgeStyle)) {

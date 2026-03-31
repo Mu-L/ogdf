@@ -404,29 +404,17 @@ pugi::xml_node SvgPrinter::drawPolygon(pugi::xml_node xmlNode, const std::list<d
 }
 
 bool SvgPrinter::isArrowEnabled(adjEntry adj) {
-	bool result = false;
-
-	if (m_attr.has(GraphAttributes::edgeArrow)) {
-		switch (m_attr.arrowType(*adj)) {
-		case EdgeArrow::Undefined:
-			result = !adj->isSource() && m_attr.directed();
-			break;
-		case EdgeArrow::First:
-			result = adj->isSource();
-			break;
-		case EdgeArrow::Last:
-			result = !adj->isSource();
-			break;
-		case EdgeArrow::Both:
-			result = true;
-			break;
-		case EdgeArrow::None:;
-		}
-	} else {
-		result = !adj->isSource() && m_attr.directed();
+	switch (m_attr.effectiveArrowType(*adj)) {
+	case EdgeArrow::First:
+		return adj->isSource();
+	case EdgeArrow::Last:
+		return !adj->isSource();
+	case EdgeArrow::Both:
+		return true;
+	default:
+	case EdgeArrow::None:
+		return false;
 	}
-
-	return result;
 }
 
 double SvgPrinter::getArrowSize(adjEntry adj) {

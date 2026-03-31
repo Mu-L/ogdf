@@ -147,7 +147,7 @@ enum class EdgeArrow {
 	Last, //!< edge arrow at target node of the edge
 	First, //!< edge arrow at source node of the edge
 	Both, //!< edge arrow at target and source node of the edge
-	Undefined
+	Undefined //!< edge arrow at target if GraphAttributes::directed() is true, none otherwise
 };
 
 //! Output operator
